@@ -86,10 +86,10 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
 
     public bool Run(int seed, int limit)
     {
-        if (this.wave == null) 
-            Init();
+        if (this.wave == null)
+            this.Init();
 
-        Clear();
+        this.Clear();
         Random random = new(seed);
 
         for (int l = 0; l < limit || limit < 0; l++)
@@ -98,7 +98,7 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
             if (node >= 0)
             {
                 this.Observe(node, random);
-                bool success = this.Propagate();
+                var success = this.Propagate();
                 if (!success) return false;
             }
             else

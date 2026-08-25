@@ -12,25 +12,32 @@ class OverlappingModel : Model
         : base(width, height, N, periodic, heuristic)
     {
         var (bitmap, SX, SY) = BitmapHelper.LoadBitmap($"samples/{name}.png");        
-        byte[] sample = new byte[bitmap.Length];
+        var sample = new byte[bitmap.Length];
         colors = [];
         for (int i = 0; i < sample.Length; i++)
         {
-            int color = bitmap[i];
-            int k = 0;
-            for (; k < colors.Count; k++) if (colors[k] == color) break;
-            if (k == colors.Count) colors.Add(color);
+            var color = bitmap[i];
+            var k = 0;
+            for (; k < colors.Count; k++)
+                if (colors[k] == color)
+                    break;
+            if (k == colors.Count)
+                colors.Add(color);
             sample[i] = (byte)k;
         }
 
         static byte[] pattern(Func<int, int, byte> f, int N)
         {
-            byte[] result = new byte[N * N];
-            for (int y = 0; y < N; y++) for (int x = 0; x < N; x++) result[x + y * N] = f(x, y);
+            var result = new byte[N * N];
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++)
+                    result[x + y * N] = f(x, y);
             return result;
         };
-        static byte[] rotate(byte[] p, int N) => pattern((x, y) => p[N - 1 - y + x * N], N);
-        static byte[] reflect(byte[] p, int N) => pattern((x, y) => p[N - 1 - x + y * N], N);
+        static byte[] rotate(byte[] p, int N) 
+            => pattern((x, y) => p[N - 1 - y + x * N], N);
+        static byte[] reflect(byte[] p, int N)
+            => pattern((x, y) => p[N - 1 - x + y * N], N);
 
         static long hash(byte[] p, int C)
         {
@@ -50,10 +57,10 @@ class OverlappingModel : Model
         int C = colors.Count;
         int xmax = periodicInput ? SX : SX - N + 1;
         int ymax = periodicInput ? SY : SY - N + 1;
-        for (int y = 0; y < ymax; y++) for (int x = 0; x < xmax; x++)
+        for (int y = 0; y < ymax; y++) 
+            for (int x = 0; x < xmax; x++)
             {
-                byte[][] ps = new byte[8][];
-
+                var ps = new byte[8][];
                 ps[0] = pattern((dx, dy) => sample[(x + dx) % SX + (y + dy) % SY * SX], N);
                 ps[1] = reflect(ps[0], N);
                 ps[2] = rotate(ps[0], N);
@@ -65,9 +72,10 @@ class OverlappingModel : Model
 
                 for (int k = 0; k < symmetry; k++)
                 {
-                    byte[] p = ps[k];
-                    long h = hash(p, C);
-                    if (patternIndices.TryGetValue(h, out int index)) weightList[index] = weightList[index] + 1;
+                    var p = ps[k];
+                    var h = hash(p, C);
+                    if (patternIndices.TryGetValue(h, out int index))
+                        weightList[index] = weightList[index] + 1;
                     else
                     {
                         patternIndices.Add(h, weightList.Count);
@@ -77,14 +85,17 @@ class OverlappingModel : Model
                 }
             }
 
-        weights = weightList.ToArray();
+        weights = [.. weightList];
         T = weights.Length;
         this.ground = ground;
 
         static bool agrees(byte[] p1, byte[] p2, int dx, int dy, int N)
         {
             int xmin = dx < 0 ? 0 : dx, xmax = dx < 0 ? dx + N : N, ymin = dy < 0 ? 0 : dy, ymax = dy < 0 ? dy + N : N;
-            for (int y = ymin; y < ymax; y++) for (int x = xmin; x < xmax; x++) if (p1[x + N * y] != p2[x - dx + N * (y - dy)]) return false;
+            for (int y = ymin; y < ymax; y++) 
+                for (int x = xmin; x < xmax; x++)
+                    if (p1[x + N * y] != p2[x - dx + N * (y - dy)]) 
+                        return false;
             return true;
         };
 
@@ -94,8 +105,10 @@ class OverlappingModel : Model
             propagator[d] = new int[T][];
             for (int t = 0; t < T; t++)
             {
-                List<int> list = new();
-                for (int t2 = 0; t2 < T; t2++) if (agrees(patterns[t], patterns[t2], dx[d], dy[d], N)) list.Add(t2);
+                List<int> list = [];
+                for (int t2 = 0; t2 < T; t2++) 
+                    if (agrees(patterns[t], patterns[t2], dx[d], dy[d], N)) 
+                        list.Add(t2);
                 propagator[d][t] = new int[list.Count];
                 for (int c = 0; c < list.Count; c++) propagator[d][t][c] = list[c];
             }
@@ -104,7 +117,7 @@ class OverlappingModel : Model
 
     public override void Save(string filename)
     {
-        int[] bitmap = new int[MX * MY];
+        var bitmap = new int[MX * MY];
         if (observed[0] >= 0)
         {
             for (int y = 0; y < MY; y++)
@@ -113,17 +126,20 @@ class OverlappingModel : Model
                 for (int x = 0; x < MX; x++)
                 {
                     int dx = x < MX - N + 1 ? 0 : N - 1;
-                    bitmap[x + y * MX] = colors[patterns[observed[x - dx + (y - dy) * MX]][dx + dy * N]];
+                    bitmap[x + y * MX] 
+                        = colors[patterns[observed[x - dx + (y - dy) * MX]][dx + dy * N]];
                 }
             }
         }
         else
         {
-            for (int i = 0; i < wave.Length; i++)
+            for (int i = 0; i < this.wave.Length; i++)
             {
                 int contributors = 0, r = 0, g = 0, b = 0;
                 int x = i % MX, y = i / MX;
-                for (int dy = 0; dy < N; dy++) for (int dx = 0; dx < N; dx++)
+                for (int dy = 0; dy < N; dy++)
+                {
+                    for (int dx = 0; dx < N; dx++)
                     {
                         int sx = x - dx;
                         if (sx < 0) sx += MX;
@@ -133,7 +149,9 @@ class OverlappingModel : Model
 
                         int s = sx + sy * MX;
                         if (!periodic && (sx + N > MX || sy + N > MY || sx < 0 || sy < 0)) continue;
-                        for (int t = 0; t < T; t++) if (wave[s][t])
+                        for (int t = 0; t < T; t++)
+                        {
+                            if (wave[s][t])
                             {
                                 contributors++;
                                 int argb = colors[patterns[t][dx + dy * N]];
@@ -141,7 +159,9 @@ class OverlappingModel : Model
                                 g += (argb & 0xff00) >> 8;
                                 b += argb & 0xff;
                             }
+                        }
                     }
+                }
                 bitmap[i] = unchecked((int)0xff000000 | ((r / contributors) << 16) | ((g / contributors) << 8) | b / contributors);
             }
         }

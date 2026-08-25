@@ -21,27 +21,27 @@ static class Program
             var name = xelem.Get<string>("name");
             Console.WriteLine($"< {name}");
 
-            bool isOverlapping = xelem.Name == "overlapping";
-            int size = xelem.Get("size", isOverlapping ? 48 : 24);
-            int width = xelem.Get("width", size);
-            int height = xelem.Get("height", size);
-            bool periodic = xelem.Get("periodic", false);
-            string heuristicString = xelem.Get<string>("heuristic");
+            var isOverlapping = xelem.Name == "overlapping";
+            var size = xelem.Get("size", isOverlapping ? 48 : 24);
+            var width = xelem.Get("width", size);
+            var height = xelem.Get("height", size);
+            var periodic = xelem.Get("periodic", false);
+            var heuristicString = xelem.Get<string>("heuristic");
             var heuristic = heuristicString == "Scanline" ? Model.Heuristic.Scanline : (heuristicString == "MRV" ? Model.Heuristic.MRV : Model.Heuristic.Entropy);
 
             if (isOverlapping)
             {
-                int N = xelem.Get("N", 3);
-                bool periodicInput = xelem.Get("periodicInput", true);
-                int symmetry = xelem.Get("symmetry", 8);
-                bool ground = xelem.Get("ground", false);
+                var N = xelem.Get("N", 3);
+                var periodicInput = xelem.Get("periodicInput", true);
+                var symmetry = xelem.Get("symmetry", 8);
+                var ground = xelem.Get("ground", false);
 
                 model = new OverlappingModel(name, N, width, height, periodicInput, periodic, symmetry, ground, heuristic);
             }
             else
             {
                 var subset = xelem.Get<string>("subset");
-                bool blackBackground = xelem.Get("blackBackground", false);
+                var blackBackground = xelem.Get("blackBackground", false);
 
                 model = new SimpleTiledModel(name, subset, width, height, periodic, blackBackground, heuristic);
             }
@@ -51,8 +51,8 @@ static class Program
                 for (int k = 0; k < 10; k++)
                 {
                     Console.Write("> ");
-                    int seed = random.Next();
-                    bool success = model.Run(seed, xelem.Get("limit", -1));
+                    var seed = random.Next();
+                    var success = model.Run(seed, xelem.Get("limit", -1));
                     if (success)
                     {
                         Console.WriteLine("DONE");
