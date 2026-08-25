@@ -2,7 +2,7 @@
 
 using System;
 
-abstract class Model
+abstract class Model(int width, int height, int N, bool periodic, Model.Heuristic heuristic)
 {
     protected bool[][] wave;
 
@@ -13,8 +13,8 @@ abstract class Model
     (int, int)[] stack;
     int stacksize, observedSoFar;
 
-    protected int MX, MY, T, N;
-    protected bool periodic, ground;
+    protected int MX = width, MY = height, T, N = N;
+    protected bool periodic = periodic, ground;
 
     protected double[] weights;
     double[] weightLogWeights, distribution;
@@ -24,16 +24,7 @@ abstract class Model
     protected double[] sumsOfWeights, sumsOfWeightLogWeights, entropies;
 
     public enum Heuristic { Entropy, MRV, Scanline };
-    Heuristic heuristic;
-
-    protected Model(int width, int height, int N, bool periodic, Heuristic heuristic)
-    {
-        MX = width;
-        MY = height;
-        this.N = N;
-        this.periodic = periodic;
-        this.heuristic = heuristic;
-    }
+    Heuristic heuristic = heuristic;
 
     void Init()
     {

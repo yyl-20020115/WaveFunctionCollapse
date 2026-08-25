@@ -8,17 +8,17 @@ static class Program
 {
     static void Main()
     {
-        Stopwatch sw = Stopwatch.StartNew();
+        var sw = Stopwatch.StartNew();
         var folder = System.IO.Directory.CreateDirectory("output");
         foreach (var file in folder.GetFiles()) file.Delete();
 
         Random random = new();
-        XDocument xdoc = XDocument.Load("samples.xml");
+        var xdoc = XDocument.Load("samples.xml");
 
-        foreach (XElement xelem in xdoc.Root.Elements("overlapping", "simpletiled"))
+        foreach (var xelem in xdoc.Root.Elements("overlapping", "simpletiled"))
         {
             Model model;
-            string name = xelem.Get<string>("name");
+            var name = xelem.Get<string>("name");
             Console.WriteLine($"< {name}");
 
             bool isOverlapping = xelem.Name == "overlapping";
@@ -40,7 +40,7 @@ static class Program
             }
             else
             {
-                string subset = xelem.Get<string>("subset");
+                var subset = xelem.Get<string>("subset");
                 bool blackBackground = xelem.Get("blackBackground", false);
 
                 model = new SimpleTiledModel(name, subset, width, height, periodic, blackBackground, heuristic);

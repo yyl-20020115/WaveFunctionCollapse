@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 class OverlappingModel : Model
 {
-    List<byte[]> patterns;
-    List<int> colors;
+    private readonly List<byte[]> patterns;
+    private readonly List<int> colors;
 
     public OverlappingModel(string name, int N, int width, int height, bool periodicInput, bool periodic, int symmetry, bool ground, Heuristic heuristic)
         : base(width, height, N, periodic, heuristic)
     {
         var (bitmap, SX, SY) = BitmapHelper.LoadBitmap($"samples/{name}.png");        
         byte[] sample = new byte[bitmap.Length];
-        colors = new List<int>();
+        colors = [];
         for (int i = 0; i < sample.Length; i++)
         {
             int color = bitmap[i];
@@ -43,9 +43,9 @@ class OverlappingModel : Model
             return result;
         };
 
-        patterns = new();
-        Dictionary<long, int> patternIndices = new();
-        List<double> weightList = new();
+        patterns = [];
+        Dictionary<long, int> patternIndices = [];
+        List<double> weightList = [];
 
         int C = colors.Count;
         int xmax = periodicInput ? SX : SX - N + 1;
