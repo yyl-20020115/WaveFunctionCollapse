@@ -34,11 +34,12 @@ static class Helper
 
     public static T Get<T>(this XElement xelem, string attribute, T defaultT = default)
     {
-        XAttribute a = xelem.Attribute(attribute);
+        var a = xelem.Attribute(attribute);
         return a == null ? defaultT : (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(a.Value);
     }
 
-    public static IEnumerable<XElement> Elements(this XElement xelement, params string[] names) => xelement.Elements().Where(e => names.Any(n => n == e.Name));
+    public static IEnumerable<XElement> Elements(this XElement xelement, params string[] names) 
+        => xelement.Elements().Where(e => names.Any(n => n == e.Name));
 }
 
 static class BitmapHelper
@@ -46,15 +47,16 @@ static class BitmapHelper
     public static (int[], int, int) LoadBitmap(string filename)
     {
         using var image = Image.Load<Bgra32>(filename);
-        int width = image.Width, height = image.Height;
-        int[] result = new int[width * height];
+        var width = image.Width;
+        var height = image.Height;
+        var result = new int[width * height];
         image.CopyPixelDataTo(MemoryMarshal.Cast<int, Bgra32>(result));
         return (result, width, height);
     }
 
     unsafe public static void SaveBitmap(int[] data, int width, int height, string filename)
     {
-        fixed (int* pData = data)
+        fixed (void* pData = data)
         {
             using var image = Image.WrapMemory<Bgra32>(pData, width, height);
             image.SaveAsPng(filename);

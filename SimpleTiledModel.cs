@@ -172,11 +172,14 @@ class SimpleTiledModel : Model
             densePropagator[1][action[D][2]][action[U][2]] = true;
         }
 
-        for (int t2 = 0; t2 < T; t2++) for (int t1 = 0; t1 < T; t1++)
+        for (int t2 = 0; t2 < T; t2++)
+        {
+            for (int t1 = 0; t1 < T; t1++)
             {
                 densePropagator[2][t2][t1] = densePropagator[0][t1][t2];
                 densePropagator[3][t2][t1] = densePropagator[1][t1][t2];
             }
+        }
 
         var sparsePropagator = new List<int>[4][];
         for (int d = 0; d < 4; d++)
@@ -185,7 +188,9 @@ class SimpleTiledModel : Model
             for (int t = 0; t < T; t++) sparsePropagator[d][t] = [];
         }
 
-        for (int d = 0; d < 4; d++) for (int t1 = 0; t1 < T; t1++)
+        for (int d = 0; d < 4; d++)
+        {
+            for (int t1 = 0; t1 < T; t1++)
             {
                 var sp = sparsePropagator[d][t1];
                 var tp = densePropagator[d][t1];
@@ -197,6 +202,7 @@ class SimpleTiledModel : Model
                 propagator[d][t1] = new int[ST];
                 for (int st = 0; st < ST; st++) propagator[d][t1][st] = sp[st];
             }
+        }
     }
 
     public override void Save(string filename)
