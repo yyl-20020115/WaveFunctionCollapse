@@ -59,8 +59,10 @@ static class BitmapHelper
 
     unsafe public static void SaveBitmap(int[] data, int width, int height, string filename)
     {
-        var cast = MemoryMarshal.Cast<int, Rgba32>(data);
-        using var image = Image<Rgba32>.LoadPixelData<Rgba32>(cast, width, height);
+        using var image = Image.LoadPixelData<Rgba32>(
+            MemoryMarshal.Cast<int, Rgba32>(data),
+            width, 
+            height);
         image.SaveAsPng(filename);
     }
 }
