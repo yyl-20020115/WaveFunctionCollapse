@@ -54,7 +54,7 @@ class SimpleTiledModel : Model
 
         foreach (var xtile in xroot.Element("tiles").Elements("tile"))
         {
-            var tilename = xtile.Get<string>("name");
+            var tilename = xtile.Get("name",string.Empty);
             if (subset != null && !subset.Contains(tilename)) continue;
 
             Func<int, int> a, b; //a is 90 degrees rotation, b is reflection
@@ -166,8 +166,8 @@ class SimpleTiledModel : Model
 
         foreach (var xneighbor in xroot.Element("neighbors").Elements("neighbor"))
         {
-            var left = xneighbor.Get<string>("left").Split([' '], StringSplitOptions.RemoveEmptyEntries);
-            var right = xneighbor.Get<string>("right").Split([' '], StringSplitOptions.RemoveEmptyEntries);
+            var left = xneighbor.Get("left",string.Empty).Split([' '], StringSplitOptions.RemoveEmptyEntries);
+            var right = xneighbor.Get("right",string.Empty).Split([' '], StringSplitOptions.RemoveEmptyEntries);
 
             if (subset != null && (!subset.Contains(left[0]) || !subset.Contains(right[0]))) continue;
 

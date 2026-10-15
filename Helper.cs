@@ -35,14 +35,14 @@ static class Helper
         return product;
     }
 
-    public static T Get<T>(this XElement xelem, string attribute, T defaultT = default)
+    public static T Get<T>(this XElement element, string attribute, T defaultT = default)
     {
-        var a = xelem.Attribute(attribute);
+        var a = element.Attribute(attribute);
         return a == null ? defaultT : (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(a.Value);
     }
 
-    public static IEnumerable<XElement> Elements(this XElement xelement, params string[] names) 
-        => xelement.Elements().Where(e => names.Any(n => n == e.Name));
+    public static IEnumerable<XElement> Elements(this XElement element, params string[] names) 
+        => element.Elements().Where(e => names.Any(n => n == e.Name));
 }
 
 static class BitmapHelper

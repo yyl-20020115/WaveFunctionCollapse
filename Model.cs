@@ -90,7 +90,7 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
             this.Init();
 
         this.Clear();
-        Random random = new(seed);
+        var random = new Random(seed);
 
         for (int l = 0; l < limit || limit < 0; l++)
         {
