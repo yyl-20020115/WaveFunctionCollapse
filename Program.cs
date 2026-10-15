@@ -8,9 +8,13 @@ static class Program
 {
     static void Main()
     {
-        var sw = Stopwatch.StartNew();
-        var folder = System.IO.Directory.CreateDirectory("output");
-        foreach (var file in folder.GetFiles()) file.Delete();
+        const string fn = "output";
+        var watch = Stopwatch.StartNew();
+        if(System.IO.Directory.Exists(fn))
+            System.IO.Directory.Delete(fn,true);
+        var folder = System.IO.Directory.CreateDirectory(fn);
+        //foreach (var file in folder.GetFiles()) 
+        //    file.Delete();
 
         Random random = new();
         var xdoc = XDocument.Load("samples.xml");
@@ -66,6 +70,6 @@ static class Program
             }
         }
 
-        Console.WriteLine($"time = {sw.ElapsedMilliseconds}");
+        Console.WriteLine($"time = {watch.ElapsedMilliseconds}");
     }
 }
