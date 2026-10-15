@@ -6,12 +6,14 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Text;
 
-class SimpleTiledModel : Model
+namespace WaveFunctionCollapse;
+
+public class SimpleTiledModel : Model
 {
-    private readonly List<int[]> tiles;
-    private readonly List<string> tilenames;
-    private readonly int tilesize;
-    private readonly bool blackBackground;
+    protected readonly List<int[]> tiles;
+    protected readonly List<string> tilenames;
+    protected readonly int tilesize;
+    protected readonly bool blackBackground;
 
     public SimpleTiledModel(string name, string subsetName, int width, int height, bool periodic, bool blackBackground, Heuristic heuristic) : base(width, height, 1, periodic, heuristic)
     {

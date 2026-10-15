@@ -5,9 +5,11 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using System.IO;
 
-static class Program
+namespace WaveFunctionCollapse;
+
+public static class Program
 {
-    static void Main()
+    public static void Main()
     {
         const string fn = "output";
         var watch = Stopwatch.StartNew();
@@ -20,7 +22,6 @@ static class Program
 
         foreach (var element in document.Root.Elements("overlapping", "simpletiled"))
         {
-            Model model;
             var name = element.Get("name", string.Empty);
             Console.WriteLine($"< {name}");
 
@@ -37,6 +38,7 @@ static class Program
                 : Model.Heuristic.Entropy)
                 ;
 
+            Model model;
             if (isOverlapping)
             {
                 var N = element.Get("N", 3);

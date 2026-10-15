@@ -2,47 +2,41 @@
 
 using System;
 
-abstract class Model(int width, int height, int N, bool periodic, Model.Heuristic heuristic)
+namespace WaveFunctionCollapse;
+
+public abstract class Model(int width, int height, int N, bool periodic, Model.Heuristic heuristic)
 {
     protected bool[][] wave;
-
     protected int[][][] propagator;
-    int[][][] compatible;
+    protected int[][][] compatible;
     protected int[] observed;
-
-    (int, int)[] stack;
-    int stacksize;
-    int observedSoFar;
-
+    protected (int, int)[] stack;
+    protected int stacksize;
+    protected int observedSoFar;
     protected int MX = width;
     protected int MY = height;
     protected int T;
     protected int N = N;
     protected bool periodic = periodic;
     protected bool ground;
-
     protected double[] weights;
-    double[] weightLogWeights;
-    double[] distribution;
-
+    protected double[] weightLogWeights;
+    protected double[] distribution;
     protected int[] sumsOfOnes;
-    double sumOfWeights;
-    double sumOfWeightLogWeights;
-    double startingEntropy;
+    protected double sumOfWeights;
+    protected double sumOfWeightLogWeights;
+    protected double startingEntropy;
     protected double[] sumsOfWeights;
     protected double[] sumsOfWeightLogWeights;
     protected double[] entropies;
-
     public enum Heuristic : int
     { 
         Entropy, 
         MRV, 
         Scanline 
     };
-
     private readonly Heuristic heuristic = heuristic;
-
-    void Init()
+    protected void Init()
     {
         this.wave = new bool[this.MX * this.MY][];
         this.compatible = new int[this.wave.Length][][];
@@ -55,7 +49,6 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
         }
         this.distribution = new double[this.T];
         this.observed = new int[this.MX * this.MY];
-
         this.weightLogWeights = new double[this.T];
         this.sumOfWeights = 0;
         this.sumOfWeightLogWeights = 0;
@@ -79,7 +72,6 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
         this.sumsOfWeights = new double[this.MX * this.MY];
         this.sumsOfWeightLogWeights = new double[this.MX * this.MY];
         this.entropies = new double[this.MX * this.MY];
-
         this.stack = new (int, int)[this.wave.Length * this.T];
         this.stacksize = 0;
     }
@@ -121,7 +113,7 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
         return true;
     }
 
-    int NextUnobservedNode(Random random)
+    protected int NextUnobservedNode(Random random)
     {
         if (this.heuristic == Heuristic.Scanline)
         {
@@ -161,7 +153,7 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
         return argmin;
     }
 
-    void Observe(int node, Random random)
+    protected void Observe(int node, Random random)
     {
         var w = this.wave[node];
         for (int t = 0; t < T; t++)
@@ -172,7 +164,7 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
                 this.Ban(node, t);
     }
 
-    bool Propagate()
+    protected bool Propagate()
     {
         while (this.stacksize > 0)
         {
@@ -218,7 +210,7 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
         return this.sumsOfOnes[0] > 0;
     }
 
-    void Ban(int i, int t)
+    protected void Ban(int i, int t)
     {
         this.wave[i][t] = false;
         var comp = this.compatible[i][t];
@@ -235,7 +227,7 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
         entropies[i] = Math.Log(sum) - this.sumsOfWeightLogWeights[i] / sum;
     }
 
-    void Clear()
+    protected void Clear()
     {
         for (int i = 0; i < this.wave.Length; i++)
         {
@@ -272,5 +264,5 @@ abstract class Model(int width, int height, int N, bool periodic, Model.Heuristi
 
     protected static int[] dx = [-1, 0, 1, 0];
     protected static int[] dy = [0, 1, 0, -1];
-    private static readonly int[] opposite = [2, 3, 0, 1];
+    protected static readonly int[] opposite = [2, 3, 0, 1];
 }

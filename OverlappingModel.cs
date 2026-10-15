@@ -3,11 +3,12 @@
 using System;
 using System.Collections.Generic;
 
-class OverlappingModel : Model
-{
-    private readonly List<byte[]> patterns;
-    private readonly List<int> colors;
+namespace WaveFunctionCollapse;
 
+public class OverlappingModel : Model
+{
+    protected readonly List<byte[]> patterns;
+    protected readonly List<int> colors;
     public OverlappingModel(string name, int N, int width, int height, bool periodicInput, bool periodic, int symmetry, bool ground, Heuristic heuristic)
         : base(width, height, N, periodic, heuristic)
     {
